@@ -95,8 +95,8 @@ int main(int narg, char *argv[]) {
 		Mat temp_2[4];
 
 		 for(int i =0; i<4; i++){
-			// pow(temp[i], 2.0,  temp_2[i]);
-			sqrt(temp[i],temp_2[i]);
+			pow(temp[i], 2.0,  temp_2[i]);
+			// sqrt(temp[i],temp_2[i]);
 		}
 
 		// imshow("camera0", temp_2[0]);
