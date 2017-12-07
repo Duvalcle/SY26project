@@ -21,7 +21,7 @@ void regulate(Mat &img) {
 int main(int narg, char *argv[]) {
 
   VideoCapture Camera(0);
-	Camera.set ( CV_CAP_PROP_FORMAT, CV_64FC3);
+	Camera.set ( CV_CAP_PROP_FORMAT, CV_32FC3);
 	Camera.set ( CV_CAP_PROP_FRAME_WIDTH,  720 );
   Camera.set ( CV_CAP_PROP_FRAME_HEIGHT, 576);
 	Camera.set ( CV_CAP_PROP_BRIGHTNESS, 0.55 );
@@ -34,7 +34,7 @@ int main(int narg, char *argv[]) {
 		cerr<<"Error opening the camera"<<endl;
 		return -1;
 }
-int kernel_size = 15;
+int kernel_size = 7;
 double sig = 2.5, lm = 6, gm = 0.3, ps = 0;
 
 	double theta[4];
@@ -54,7 +54,7 @@ double sig = 2.5, lm = 6, gm = 0.3, ps = 0;
 
     Mat kernel[4], prKer[4];
     for(int i =0; i<4; i++){
-			kernel[i] =getGaborKernel(Size(kernel_size,kernel_size), sig, theta[i], lm,gm, ps, CV_32F);
+			kernel[i] = getGaborKernel(Size(kernel_size,kernel_size), sig, theta[i], lm,gm, ps, CV_32F);
 			// cout << kernel[i] << "\n" << endl;
 			// if (i == 0 or i == 2){
 			// 	kernel[i] -= 0.5;
@@ -95,6 +95,11 @@ double sig = 2.5, lm = 6, gm = 0.3, ps = 0;
 		 for(int i =0; i<4; i++){
 			pow(temp[i], 2.0,  temp_2[i]);
 		}
+		imshow("camera0", temp[0]);
+		imshow("camera2", temp[2]);
+		imshow("camera1", temp[1]);
+		imshow("camera3", temp[3]);
+		//
     // imshow("camera0_2", temp_2[0]);
     // imshow("camera2_2", temp_2[2]);
     // imshow("camera1_2", temp_2[1]);

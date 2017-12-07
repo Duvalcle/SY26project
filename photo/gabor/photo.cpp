@@ -8,21 +8,24 @@ using namespace cv;
 
 
 void troncate(Mat &img) {
+	// double min, max;
 	threshold(img, img, 1, 1, THRESH_TRUNC);
 	threshold(img, img, 0, 0, THRESH_TOZERO);
+	// minMaxLoc(img, &min, &max);
+	// cout << "\nmin : " << min << "\t max : " << max << endl;
 }
 
 void regulate(Mat &img) {
 	double min, max;
 	minMaxLoc(img, &min, &max);
 	img = (img - min) / (max - min);
-	cout << "\nmin : " << min << "\t max : " << max << endl;
+	// cout << "\nmin : " << min << "\t max : " << max << endl;
 }
 
 int main(int narg, char *argv[]) {
 
-	int kernel_size = 15;
-	double sig = 4, lm = 6, gm = 0.3, ps = 0;
+	int kernel_size = 11;
+	double sig = 1.5, lm = 4, gm = 0.3, ps = 0;
 	double theta[4];
 	// theta[0] = 360;
 	// theta[1] = 45;
@@ -64,6 +67,14 @@ int main(int narg, char *argv[]) {
         }
 
     cvtColor(frame,frame,COLOR_BGR2GRAY); //oui ou non ???
+		// troncate(frame);
+		// regulate(frame);
+		double min, max;
+
+		minMaxLoc(frame, &min, &max);
+
+		cout << "\nmin : " << min << "\t max : " << max << endl;
+
     // equalizeHist( frame, frame );
     //Sobel(frame, sobx, CV_8U, 1, 0);
     //Sobel(frame, soby, CV_8U, 0, 1);
@@ -75,12 +86,12 @@ int main(int narg, char *argv[]) {
     for(int i =0; i<4; i++){
 			filter2D(frame, temp[i], CV_32F, kernel[i]);
 			//cout << temp[i] << endl;
-			double min, max;
+			// double min, max;
 			// threshold(temp[i], temp[i], 1, 1, THRESH_TRUNC);
 			// threshold(temp[i], temp[i], 0, 0, THRESH_TOZERO);
 			troncate(temp[i]);
-			minMaxLoc(temp[i], &min, &max);
-			cout << "\nmin : " << min << "\t max : " << max << endl;
+			// minMaxLoc(temp[i], &min, &max);
+			// cout << "\nmin : " << min << "\t max : " << max << endl;
 			//
 			// temp[i] = (temp[i] - min) / (max - min);
 
@@ -118,20 +129,20 @@ int main(int narg, char *argv[]) {
 
 		// regulate(result);
 		// troncate(result);
-		double min, max;
-		minMaxLoc(result, &min, &max);
+		// double min, max;
+		// minMaxLoc(result, &min, &max);
 		// result = (result - min) / (max - min);
-		cout << "\nmin : " << min << "\t max : " << max << endl;
+		// cout << "\nmin : " << min << "\t max : " << max << endl;
 
 
     // imshow("camera_moy", result2);
 		// bitwise_not(result2, result2);
 
     for(;;) {
-			// imshow("kernel0", prKer[0]);
-			// imshow("kernel1", prKer[1]);
-			// imshow("kernel2", prKer[2]);
-			// imshow("kernel3", prKer[3]);
+			imshow("kernel0", prKer[0]);
+			imshow("kernel1", prKer[1]);
+			imshow("kernel2", prKer[2]);
+			imshow("kernel3", prKer[3]);
 
 			// imshow("camera0", temp[0]);
 			// imshow("camera1", temp[1]);
