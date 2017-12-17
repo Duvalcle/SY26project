@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+*.h5
+
+
+*.csv
+*.hdf5
+/TrainingSY26
+*.png
+*.jpeg
