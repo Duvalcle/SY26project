@@ -10,8 +10,8 @@ import h5py
 import cv2
 import matplotlib.pyplot as plt
 
-IMG_SIZE_HEIGHT = 48
-IMG_SIZE_WIDHT = 64
+IMG_SIZE_HEIGHT = 96
+IMG_SIZE_WIDHT = 128
 CLASSES = {"Carre": 0, "Cercle": 1, "Losange": 2, "Croix": 3, "Triangle": 4, "Octogone": 5}
 NUM_CLASSES = len(CLASSES)
 
@@ -82,6 +82,7 @@ for i in range(len(train_addrs)):
     img = cv2.imread(addr)
     # img = detecte_edges(img)
     img = cv2.resize(img, (IMG_SIZE_WIDHT, IMG_SIZE_HEIGHT), interpolation=cv2.INTER_CUBIC)
+    img = (img / 127.5) -1.
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # img = img.reshape((IMG_SIZE_HEIGHT, IMG_SIZE_WIDHT, 1))
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
