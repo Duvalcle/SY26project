@@ -14,8 +14,8 @@ from keras.utils import HDF5Matrix
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Conv2D
-from keras.layers.pooling import MaxPooling2D
-from keras.optimizers import SGD
+from keras.layers.pooling import MaxPooling2D, AveragePooling2D
+from keras.optimizers import SGD, Adam
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from keras import backend as K
 # K.set_image_data_format('channels_first')
@@ -26,7 +26,7 @@ IMG_SIZE_HEIGHT = 96
 IMG_SIZE_WIDHT = 128
 CLASSES = {"Carre": 0, "Cercle": 1, "Losange": 2, "Croix": 3, "Triangle": 4, "Octogone": 5}
 NUM_CLASSES = len(CLASSES)
-lr = 0.1
+lr = 0.01
 
 
 def preprocess_img(img):
@@ -85,25 +85,30 @@ def cnn_model(input_shape):
     # model.add(Dense(512, activation='relu'))
     # model.add(Dropout(0.5))
     # model.add(Dense(NUM_CLASSES, activation='softmax'))
-
     model.add(Conv2D(32, kernel_size=(5, 5),
                      activation='relu',
                      input_shape=input_shape))
-    model.add(MaxPooling2D(pool_size=(2, 2))) #Test Clement
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2))) #Test Clement
     model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2))) #Test Clement
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2))) #Test Clement
+    model.add(Conv2D(64, (3,3), activation='relu'))
+    model.add(AveragePooling2D(pool_size=(4, 4), strides=(4,4))) #Test Clement
+    # model.add(Conv2D(64, (3, 3), activation='relu'))
+    # model.add(MaxPooling2D(pool_size=(2, 2)))
 
     # model.add(Dropout(0.25))
     model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
+    print model.output_shape
+
+    model.add(Dense(500, activation='relu'))
     # model.add(Dropout(0.5))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
+
+
     print("\nneuronal shape:")
 
     for layer in model.layers:
-        print(layer.get_output_at(0).get_shape().as_list())
+        print(layer.name, layer.get_output_at(0).get_shape().as_list())
     return model
 
 
@@ -141,10 +146,14 @@ def main(arg):
 
 
     y_train = keras.utils.to_categorical(y_train, NUM_CLASSES)
-
+    # _x_train = np.zeros_like(x_train)
+    # _y_train = np.zeros_like(y_train)
+    # for i in range(_x_train.shape[0]):
+    #     _x_train[i,:,:,:] = (((i % 6) * 50.) / 127.5) - 1.
+    #     _y_train[i, i % 6] = 1
     model = cnn_model(input_shape)
-
-    sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
+    sgd = Adam(lr=0.001)
+    # sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
                   metrics=['accuracy'])
@@ -153,17 +162,23 @@ def main(arg):
     #               optimizer=keras.optimizers.Adadelta(),
     #               metrics=['accuracy'])
 
-    batch_size = 60
+    batch_size = 30
     epochs = 12
 
     # X.reshape((-1,X.shape[], X.shape, X.shape))
+    from scipy import misc
 
+    print x_train.shape, y_train.shape
+    # for i in range(10):
+    #     print y_train[i]
+    #     misc.imshow(x_train[i])
+    # sys.exit(0)
+    # LearningRateScheduler(lr_schedule)
     model.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
               validation_split=0.2,
-              callbacks=[LearningRateScheduler(lr_schedule),
-                         ModelCheckpoint('model.h5', save_best_only=True)]
+              callbacks=[ModelCheckpoint('model.h5', save_best_only=True)]
               )
     # model.fit(x_train, y_train,
     #           batch_size=batch_size,
