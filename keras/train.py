@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
+np.random.seed(123)  # for reproducibility
 import os
 import sys
 import cv2
@@ -93,15 +94,15 @@ def cnn_model(input_shape):
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2))) #Test Clement
     model.add(Conv2D(64, (3,3), activation='relu'))
     model.add(AveragePooling2D(pool_size=(4, 4), strides=(4,4))) #Test Clement
-    # model.add(Conv2D(64, (3, 3), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    # model.add(Dropout(0.25))
+    model.add(Dropout(0.25))
     model.add(Flatten())
-    print model.output_shape
+    # print model.output_shape
 
     model.add(Dense(500, activation='relu'))
-    # model.add(Dropout(0.5))
+    model.add(Dropout(0.40))
     model.add(Dense(NUM_CLASSES, activation='softmax'))
 
 
@@ -163,7 +164,7 @@ def main(arg):
     #               metrics=['accuracy'])
 
     batch_size = 30
-    epochs = 12
+    epochs = 20
 
     # X.reshape((-1,X.shape[], X.shape, X.shape))
     from scipy import misc
@@ -185,7 +186,6 @@ def main(arg):
     #           epochs=epochs,
     #           verbose=1
     #           )
-    model.save("SY26_model.h5")
 
 # def main():
 #     X_test = []

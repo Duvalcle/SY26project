@@ -60,6 +60,8 @@ model.add(Dense(num_classes, activation='softmax'))
 model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
+for layer in model.layers:
+    print(layer.name, layer.get_output_at(0).get_shape().as_list())
 
 
 
