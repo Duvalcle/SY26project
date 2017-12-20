@@ -10,8 +10,8 @@ import h5py
 import cv2
 import matplotlib.pyplot as plt
 
-IMG_SIZE_HEIGHT = 48
-IMG_SIZE_WIDHT = 64
+IMG_SIZE_HEIGHT = 24
+IMG_SIZE_WIDHT = 32
 CLASSES = {"Carre": 0, "Cercle": 1, "Losange": 2, "Croix": 3, "Triangle": 4, "Octogone": 5}
 NUM_CLASSES = len(CLASSES)
 
@@ -43,7 +43,7 @@ for i in range(len(train_addrs)):
     addr = train_addrs[i]
     img = cv2.imread(addr)
     img = cv2.resize(img, (IMG_SIZE_WIDHT, IMG_SIZE_HEIGHT), interpolation=cv2.INTER_CUBIC)
-    img = (img / 127.5) -1.
+    #img = (img / 127.5) -1.
     if i % 100 == 0 and i > 1:
         print 'Train data: {}/{}'.format(i, len(train_addrs))
     hdf5_file["train_img"][i, ...] = img[None]

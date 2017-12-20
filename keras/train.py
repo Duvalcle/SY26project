@@ -45,7 +45,7 @@ def cnn_model(input_shape):
     model.add(Conv2D(64, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2))) #Test Clement
     model.add(Conv2D(64, (3,3), activation='relu'))
-    model.add(AveragePooling2D(pool_size=(4, 4), strides=(4,4))) #Test Clement
+    #model.add(AveragePooling2D(pool_size=(4, 4), strides=(4,4))) #Test Clement
     # model.add(Conv2D(64, (3, 3), activation='relu'))
     # model.add(MaxPooling2D(pool_size=(2, 2)))
 
