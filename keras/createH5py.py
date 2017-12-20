@@ -10,8 +10,8 @@ import h5py
 import cv2
 import matplotlib.pyplot as plt
 
-IMG_SIZE_HEIGHT = 96
-IMG_SIZE_WIDHT = 128
+IMG_SIZE_HEIGHT = 48
+IMG_SIZE_WIDHT = 64
 CLASSES = {"Carre": 0, "Cercle": 1, "Losange": 2, "Croix": 3, "Triangle": 4, "Octogone": 5}
 NUM_CLASSES = len(CLASSES)
 
