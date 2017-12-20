@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
-np.random.seed(123)  # for reproducibility
+# np.random.seed(123)  # for reproducibility
 import os
 import sys
 import cv2
@@ -23,35 +23,10 @@ from keras import backend as K
 
 from keras.datasets import mnist
 
-IMG_SIZE_HEIGHT = 96
-IMG_SIZE_WIDHT = 128
+# IMG_SIZE_HEIGHT = 96
+# IMG_SIZE_WIDHT = 128
 CLASSES = {"Carre": 0, "Cercle": 1, "Losange": 2, "Croix": 3, "Triangle": 4, "Octogone": 5}
 NUM_CLASSES = len(CLASSES)
-lr = 0.01
-
-
-def preprocess_img(img):
-    # Histogram normalization in v channel
-    # hsv[:, :, 2] = exposure.equalize_hist(hsv[:, :, 2])
-    # img = color.hsv2rgb(hsv)
-
-    # central square crop
-    # min_side = min(img.shape[:-1])
-    # centre = img.shape[0] // 2, img.shape[1] // 2
-    # img = img[centre[0] - min_side // 2:centre[0] + min_side // 2,
-    #           centre[1] - min_side // 2:centre[1] + min_side // 2,
-    #           :]
-    # print(img)
-    # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    # rescale to standard size
-    img = cv2.resize(img, (IMG_SIZE_HEIGHT, IMG_SIZE_WIDHT))
-
-    # roll color axis to axis 0
-    # img = np.rollaxis(img, -1)
-
-    return img
-
 
 def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
@@ -63,29 +38,6 @@ def get_class(img_path):
 def cnn_model(input_shape):
     model = Sequential()
 
-    # model.add(Conv2D(32, (3, 3), padding='same',
-    #                  input_shape=(1, IMG_SIZE_WIDHT, IMG_SIZE_HEIGHT),
-    #                  activation='relu'))
-    # model.add(Conv2D(32, (3, 3), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=(2, 2)))
-    # model.add(Dropout(0.2))
-    #
-    # model.add(Conv2D(64, (3, 3), padding='same',
-    #                  activation='relu'))
-    # model.add(Conv2D(64, (3, 3), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=(2, 2)))
-    # model.add(Dropout(0.2))
-    #
-    # model.add(Conv2D(128, (3, 3), padding='same',
-    #                  activation='relu'))
-    # model.add(Conv2D(128, (3, 3), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=(2, 2)))
-    # model.add(Dropout(0.2))
-    #
-    # model.add(Flatten())
-    # model.add(Dense(512, activation='relu'))
-    # model.add(Dropout(0.5))
-    # model.add(Dense(NUM_CLASSES, activation='softmax'))
     model.add(Conv2D(32, kernel_size=(5, 5),
                      activation='relu',
                      input_shape=input_shape))
@@ -99,7 +51,6 @@ def cnn_model(input_shape):
 
     model.add(Dropout(0.25))
     model.add(Flatten())
-    # print model.output_shape
 
     model.add(Dense(500, activation='relu'))
     model.add(Dropout(0.40))
@@ -112,26 +63,10 @@ def cnn_model(input_shape):
         print(layer.name, layer.get_output_at(0).get_shape().as_list())
     return model
 
-
-
 def main(arg):
     path = arg
     imgs = []
     labels = []
-
-    # (x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-    # all_img_paths = glob.glob(os.path.join(path, '*/*.*'))
-    # np.random.shuffle(all_img_paths)
-    # for img_path in all_img_paths:
-    #     img = preprocess_img(cv2.imread(img_path,0))[None,:,:]
-    #     label = get_class(img_path)
-    #     imgs.append(img)
-    #     labels.append(label)
-    #
-    # X = np.array(imgs, dtype='float32')
-    # # Make one hot targets
-    # Y = np.eye(NUM_CLASSES, dtype='uint8')[labels]
 
     x_train = HDF5Matrix(path, 'train_img')
     y_train = HDF5Matrix(path, 'train_labels')
@@ -143,15 +78,8 @@ def main(arg):
     print "input_shape:", input_shape[2]
 
     input_shape = np.array(input_shape, dtype='int')
-    # print input_shape
-
 
     y_train = keras.utils.to_categorical(y_train, NUM_CLASSES)
-    # _x_train = np.zeros_like(x_train)
-    # _y_train = np.zeros_like(y_train)
-    # for i in range(_x_train.shape[0]):
-    #     _x_train[i,:,:,:] = (((i % 6) * 50.) / 127.5) - 1.
-    #     _y_train[i, i % 6] = 1
     model = cnn_model(input_shape)
     sgd = Adam(lr=0.001)
     # sgd = SGD(lr=lr, decay=1e-6, momentum=0.9, nesterov=True)
@@ -159,48 +87,15 @@ def main(arg):
                   optimizer=sgd,
                   metrics=['accuracy'])
 
-    # model.compile(loss=keras.losses.categorical_crossentropy,
-    #               optimizer=keras.optimizers.Adadelta(),
-    #               metrics=['accuracy'])
-
     batch_size = 30
     epochs = 20
 
-    # X.reshape((-1,X.shape[], X.shape, X.shape))
-    from scipy import misc
-
-    print x_train.shape, y_train.shape
-    # for i in range(10):
-    #     print y_train[i]
-    #     misc.imshow(x_train[i])
-    # sys.exit(0)
-    # LearningRateScheduler(lr_schedule)
     model.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
               validation_split=0.2,
               callbacks=[ModelCheckpoint('model.h5', save_best_only=True)]
               )
-    # model.fit(x_train, y_train,
-    #           batch_size=batch_size,
-    #           epochs=epochs,
-    #           verbose=1
-    #           )
-
-# def main():
-#     X_test = []
-#     y_test = []
-#     with open('dataset.csv') as csvfile:
-#         readCSV = csv.reader(csvfile, delimiter=';')
-#         for row in readCSV:
-#             # print(row)
-#             # print(row[0])
-#             # print(row[1])
-#             X_test.append(preprocess_img(io.imread(row[0])))
-#             # X_test.append(row[0])
-#             y_test.append(row[1])
-
-
 
 if __name__ == '__main__':
     main(sys.argv[1])
