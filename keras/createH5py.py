@@ -22,8 +22,8 @@ def get_class(img_path):
 path = sys.argv[1]
 shuffle_data = True  # shuffle the addresses before saving
 hdf5_path = 'dataset.hdf5'  # address to where you want to save the hdf5 file
-train_shape = (len(train_addrs), IMG_SIZE_HEIGHT, IMG_SIZE_WIDHT, 3)
 train_addrs = glob.glob(os.path.join(path, '*/*.*'))
+train_shape = (len(train_addrs), IMG_SIZE_HEIGHT, IMG_SIZE_WIDHT, 3)
 
 if shuffle_data:
     shuffle(train_addrs)
