@@ -20,7 +20,7 @@ from keras import backend as K
 CLASSES = {"Carre": 0, "Cercle": 1, "Losange": 2, "Croix": 3, "Triangle": 4, "Octogone": 5}
 NUM_CLASSES = len(CLASSES)
 
-# fonction pour définir le réseau de neurone
+# fonction pour definir le reseau de neurone
 def cnn_model(input_shape):
     model = Sequential()
 
@@ -51,7 +51,7 @@ def main(arg):
     imgs = []
     labels = []
 
-    # récuparition des données du fichier
+    # recuparition des donnees du fichier
     x_train = HDF5Matrix(path, 'train_img')
     y_train = HDF5Matrix(path, 'train_labels')
     input_shape = HDF5Matrix(path, 'size_image')
@@ -67,13 +67,13 @@ def main(arg):
     input_shape = np.array(input_shape, dtype='int')
     y_train = keras.utils.to_categorical(y_train, NUM_CLASSES)
 
-    # création du réseau de neurone
+    # creation du reseau de neurone
     model = cnn_model(input_shape)
 
-    # règle d'aprentissage Adam
+    # regle d'aprentissage Adam
     sgd = Adam(lr=0.001)
 
-    # compilation du modéle
+    # compilation du modele
     model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
                   metrics=['accuracy'])
