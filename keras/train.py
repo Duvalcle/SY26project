@@ -17,9 +17,6 @@ from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint
 from keras import backend as K
 
-
-# IMG_SIZE_HEIGHT = 96
-# IMG_SIZE_WIDHT = 128
 CLASSES = {"Carre": 0, "Cercle": 1, "Losange": 2, "Croix": 3, "Triangle": 4, "Octogone": 5}
 NUM_CLASSES = len(CLASSES)
 
@@ -30,9 +27,9 @@ def cnn_model(input_shape):
     model.add(Conv2D(32, kernel_size=(5, 5),
                      activation='relu',
                      input_shape=input_shape))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2))) #Test Clement
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
     model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2))) #Test Clement
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
     model.add(Conv2D(64, (3,3), activation='relu'))
 
     model.add(Dropout(0.25))
@@ -59,7 +56,7 @@ def main(arg):
     y_train = HDF5Matrix(path, 'train_labels')
     input_shape = HDF5Matrix(path, 'size_image')
 
-    #debuf print
+    #debug print
     print "X shape:", x_train.shape
     print "Y shape:", y_train.shape
     print "input_shape:", input_shape[0]
