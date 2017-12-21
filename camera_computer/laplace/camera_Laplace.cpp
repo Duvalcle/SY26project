@@ -68,7 +68,7 @@ int main(int narg, char *argv[]) {
 		imshow("camera init", frame);
 
 		//detections de contours
-		detecte_edges(frame);
+		detecte_edges_laplace(frame);
 
 		//afficher la détéction de contours
     imshow("frame", frame);

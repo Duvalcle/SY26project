@@ -21,8 +21,9 @@ void regulate(Mat &img) {
 
 void detecte_edges_gabor(Mat & img) {
 	// definition des kernels
-	int kernel_size = 7;
-	double sig = 2.5, lm = 6, gm = 0.3, ps = 0;
+
+	int kernel_size = 11;
+	double sig = 1.5, lm = 4, gm = 0.3, ps = 0;
 
 	double theta[4];
 	theta[0] = 0 ;
